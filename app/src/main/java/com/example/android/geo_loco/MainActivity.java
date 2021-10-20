@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                //settings are satisfied and we ca start location update
+                //settings are satisfied and we can start location update
                 startLocationUpdates();
             }
         });
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void getLastLocation() {
+    /*private void getLastLocation() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-    }
+    }*/
 
     private void askLocationPermission(){
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_DENIED){
