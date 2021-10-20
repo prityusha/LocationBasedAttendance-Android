@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "501684827293",
+    "project_id": "geoloco-a32e3",
+    "storage_bucket": "geoloco-a32e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501684827293:android:0bf4e19aa28696dc459074",
+        "android_client_info": {
+          "package_name": "com.example.android.geo_loco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501684827293-c6vbbvaoaagt0po20mat7suklr0k6tln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByQMoG_Yw8-oW06r3XfzONFpZPsNorjh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501684827293-c6vbbvaoaagt0po20mat7suklr0k6tln.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
