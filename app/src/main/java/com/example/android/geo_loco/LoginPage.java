@@ -16,7 +16,7 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Sing In");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Sign In");
 
         //buuton for login activity
         Button buttonLogin = findViewById(R.id.loginbutton);
