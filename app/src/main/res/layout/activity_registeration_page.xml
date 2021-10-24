@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".registeration_page">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="20dp"
+        android:padding="20dp">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/registration_page_heading"
+            android:id="@+id/textview_registration_page_heading"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textAlignment="center"
+            android:textColor="#FF03DAC5"
+            />
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_registration_page_full_name"
+            android:layout_below="@+id/textview_registration_page_heading"
+            android:layout_marginTop="50dp"
+            android:text="@string/registration_page_text_view_full_name"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_view_registration_page_full_name"
+            android:layout_below="@+id/textview_registration_page_full_name"
+            android:padding="5dp"
+            android:hint="@string/registration_page_edit_text_full_name"
+            android:inputType="text"
+            android:background="@drawable/border"
+
+            />
+
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_registration_page_email"
+            android:layout_below="@+id/edit_view_registration_page_full_name"
+            android:layout_marginTop="50dp"
+            android:text="@string/registration_page_text_view_email"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_view_registration_page_email"
+            android:layout_below="@+id/textview_registration_page_email"
+            android:padding="5dp"
+            android:hint="@string/registration_page_edit_view_email"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/border"
+            />
+
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_registration_page_password"
+            android:layout_below="@+id/edit_view_registration_page_email"
+            android:layout_marginTop="50dp"
+            android:text="@string/password"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_view_registration_page_password"
+            android:layout_below="@+id/textview_registration_page_password"
+            android:padding="5dp"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            android:background="@drawable/border"
+            />
+
+
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_registration_page_confirm_password"
+            android:layout_below="@+id/edit_view_registration_page_password"
+            android:layout_marginTop="50dp"
+            android:text="@string/confirm_password"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_view_registration_page_confirm_password"
+            android:layout_below="@+id/textview_registration_page_confirm_password"
+            android:padding="5dp"
+            android:hint="@string/confirm_password_hint"
+            android:inputType="textPassword"
+            android:background="@drawable/border"
+            />
+
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_registration_page_dob"
+            android:layout_below="@+id/edit_view_registration_page_confirm_password"
+            android:layout_marginTop="50dp"
+            android:text="@string/registration_page_text_view_dob"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_view_registration_page_dob"
+            android:layout_below="@+id/textview_registration_page_dob"
+            android:padding="5dp"
+            android:hint="@string/registration_page_edit_view_dob"
+            android:inputType="date"
+            android:background="@drawable/border"
+            />
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_registration_page_enrollment"
+            android:layout_below="@+id/edit_view_registration_page_dob"
+            android:layout_marginTop="50dp"
+            android:text="@string/text_view_enrollment_number"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_view_registration_page_enrollment"
+            android:layout_below="@+id/textview_registration_page_enrollment"
+            android:padding="5dp"
+            android:hint="@string/enrollment_number_hint"
+            android:inputType="number"
+            android:background="@drawable/border"
+            />
+
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_registration_page_gender"
+            android:layout_below="@+id/edit_view_registration_page_enrollment"
+            android:layout_marginTop="50dp"
+            android:text="@string/registration_page_text_view_gender"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            />
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/radio_group_registration_page_gender"
+            android:layout_below="@+id/textview_registration_page_gender"
+            android:background="@drawable/border">
+
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radio_button_registration_page_female"
+                android:text="@string/radio_button_female"
+                android:textColor="#555555"
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radio_button_registration_page_male"
+                android:text="@string/radio_button_male"
+                android:layout_marginStart="20dp"
+                android:textColor="#555555"
+                />
+        </RadioGroup>
+
+
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_registration_page_register"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="70dp"
+            android:text="@string/register"
+            android:layout_below="@+id/radio_group_registration_page_gender"
+            />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_bar_register_page"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/button_registration_page_register"
+            android:layout_marginTop="10dp"/>
+
+
+
+    </RelativeLayout>
+
+</ScrollView>

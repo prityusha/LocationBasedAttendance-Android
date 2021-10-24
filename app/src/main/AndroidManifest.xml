@@ -15,21 +15,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Geoloco">
+
+        <!-- registration page activity -->
+        <activity android:name=".registeration_page">
+
+        </activity>
+        <!-- this is our starting intent i.e. homepage -->
         <activity
             android:name=".Homepage"
             android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-        </activity>
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- login page activity -->
         <activity
             android:name=".LoginPage"
-            android:exported="true" />
-        <activity
-            android:name=".Signup"
             android:exported="true" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
