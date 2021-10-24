@@ -20,6 +20,9 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -33,6 +36,8 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.net.URI;
 
@@ -43,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationClient;
     LocationRequest locationRequest;
 
+    //FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private TextView textViewLat;
+    private TextView textViewLong;
+    private Button updateButton;
+    private String variableLatitude;
+    private String variableLongitude;
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -53,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
             }
             for(Location location:locationResult.getLocations()){
                 Log.d(TAG, "onLocation Result" + location.toString());
+
+                textViewLat.setText(Double.toString(location.getLatitude()));
+                textViewLong.setText(Double.toString(location.getLongitude()));
+
+                variableLatitude=Double.toString(location.getLatitude());
+                variableLongitude=Double.toString(location.getLongitude());
+
             }
         }
     };
@@ -62,11 +82,47 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        textViewLat=findViewById(R.id.textView2);
+        textViewLong=findViewById(R.id.textView3);
+        updateButton=findViewById(R.id.buttonview);
+
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                databaseReference.child("Latitude").push().setValue(variableLatitude.toString());
+                databaseReference.child("Longitude").push().setValue(variableLongitude.toString());
+
+                //ref.child(firebaseUser.getUid()).child("Latitude").setValue(value_lat);
+                //ref.child(firebaseUser.getUid()).child("Longitude").setValue(value_lng);
+
+                Toast.makeText(MainActivity.this,"Clicked!",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
         locationRequest = LocationRequest.create();
 
         locationRequest.setInterval(4000);
         locationRequest.setFastestInterval(2000);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference=firebaseDatabase.getReference("Location");
+
+
+
+        /*databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
 
     }
 
@@ -160,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     private void askLocationPermission(){
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_DENIED){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_DENIED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,Manifest.permission.ACCESS_FINE_LOCATION)){
                 Log.d(TAG,"Ask Permission, You should show an alert Dialog!");
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},Access_location_request_code);
@@ -173,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull  String[] permissions, @NonNull  int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull  int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode==Access_location_request_code){
             if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
@@ -186,5 +242,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }
