@@ -10,7 +10,7 @@
     <string name="registration_page_edit_view_dob">(DD/MM/YYYY)</string>
     <string name="registration_page_text_view_gender">Gender</string>
     <string name="radio_button_female">Female</string>
-    <string name="radio_button_male">male</string>
+    <string name="radio_button_male">Male</string>
     <string name="password">Password</string>
     <string name="password_hint">Enter Your Password</string>
     <string name="confirm_password">Confirm Password</string>
