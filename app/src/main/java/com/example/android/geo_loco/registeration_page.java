@@ -3,12 +3,15 @@ package com.example.android.geo_loco;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -19,6 +22,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -35,6 +42,8 @@ public class registeration_page extends AppCompatActivity {
     private RadioGroup radioGroup_register_gender;
     private RadioButton radioButton_register_button_gender;
     private ProgressBar progressBar_register;
+    private DatePickerDialog picker;
+    private static final String TAG = "registeration_page";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +63,25 @@ public class registeration_page extends AppCompatActivity {
 
         radioGroup_register_gender = findViewById(R.id.radio_group_registration_page_gender);
         radioGroup_register_gender.clearCheck();
+
+        editText_register_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+
+                //Date picker Dialog
+                picker = new DatePickerDialog(registeration_page.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        editText_register_dob.setText(dayOfMonth+ "/" + (month+1)+"/"+year);
+                    }
+                    },year,month,day);
+                picker.show();
+            }
+        });
 
         Button buttonRegister = findViewById(R.id.button_registration_page_register);
         buttonRegister.setOnClickListener(new View.OnClickListener() {
@@ -179,6 +207,22 @@ public class registeration_page extends AppCompatActivity {
 
 
 
+                }else{
+                    try{
+                        throw task.getException();
+                    }catch (FirebaseAuthWeakPasswordException e){
+                        editText_register_pwd.setError("your password is too weak , kindly use a mix of alphabets, numbers and special characters");
+                        editText_register_pwd.requestFocus();
+                    }catch (FirebaseAuthInvalidCredentialsException e){
+                        editText_register_email.setError("your email is invalid or already in use. kindly re-enter the email");
+                        editText_register_email.requestFocus();
+                    }catch (FirebaseAuthUserCollisionException e){
+                        editText_register_email.setError("user is already with this email id");
+                        editText_register_email.requestFocus();
+                    }catch (Exception e){
+                        Log.e(TAG , e.getMessage());
+                        Toast.makeText(registeration_page.this ,e.getMessage() , Toast.LENGTH_LONG).show();
+                    }
                 }
                 progressBar_register.setVisibility(View.GONE);
             }

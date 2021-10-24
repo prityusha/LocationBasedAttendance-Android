@@ -36,6 +36,7 @@
             android:textSize="16sp"
             android:textColor="#555555"
             />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -143,6 +144,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/edit_view_registration_page_dob"
             android:layout_below="@+id/textview_registration_page_dob"
+            android:focusable="false"
             android:padding="5dp"
             android:hint="@string/registration_page_edit_view_dob"
             android:inputType="date"
