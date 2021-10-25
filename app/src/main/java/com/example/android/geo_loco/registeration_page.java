@@ -3,12 +3,14 @@ package com.example.android.geo_loco;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -26,16 +28,17 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class registeration_page extends AppCompatActivity {
 
-    private EditText editText_register_full_name , editText_register_email , editText_register_pwd , editText_register_confirm_pwd , editText_register_enrollment , editText_register_dob;
+    private EditText editText_register_full_name , editText_register_email , editText_register_pwd , editText_register_confirm_pwd , editText_register_enrollment , editText_register_dob , editText_register_batch;
     private RadioGroup radioGroup_register_gender;
     private RadioButton radioButton_register_button_gender;
     private ProgressBar progressBar_register;
-
+    private DatePickerDialog picker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +54,31 @@ public class registeration_page extends AppCompatActivity {
         editText_register_confirm_pwd = findViewById(R.id.edit_view_registration_page_confirm_password);
         editText_register_enrollment = findViewById(R.id.edit_view_registration_page_enrollment);
         editText_register_dob = findViewById(R.id.edit_view_registration_page_dob);
+        editText_register_batch = findViewById(R.id.edit_view_registration_page_batch);
 
         radioGroup_register_gender = findViewById(R.id.radio_group_registration_page_gender);
         radioGroup_register_gender.clearCheck();
+
+
+        editText_register_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+
+                //Date picker Dialog
+                picker = new DatePickerDialog(registeration_page.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        editText_register_dob.setText(dayOfMonth+ "/" + (month+1)+"/" + year);
+                    }
+                    },year,month,day);
+                picker.show();
+            }
+        });
+
 
         Button buttonRegister = findViewById(R.id.button_registration_page_register);
         buttonRegister.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +93,7 @@ public class registeration_page extends AppCompatActivity {
                 String textConfirmPwd = editText_register_confirm_pwd.getText().toString();
                 String textEnrollment = editText_register_enrollment.getText().toString();
                 String textDob = editText_register_dob.getText().toString();
+                String textBatch = editText_register_batch.getText().toString();
                 String textGender;
                 if(TextUtils.isEmpty(textFullName)){
                     Toast.makeText(registeration_page.this , "please enter the full name", Toast.LENGTH_LONG).show();
@@ -123,7 +149,7 @@ public class registeration_page extends AppCompatActivity {
                 else{
                     textGender = radioButton_register_button_gender.getText().toString();
                     progressBar_register.setVisibility(View.VISIBLE);
-                    registeruser(textFullName , textEmail , textPwd  , textEnrollment , textDob , textGender);
+                    registeruser(textFullName , textEmail , textPwd  , textEnrollment , textDob , textGender, textBatch);
                 }
 
 
@@ -133,7 +159,7 @@ public class registeration_page extends AppCompatActivity {
 
     }
 
-    private void registeruser(String textFullName, String textEmail, String textPwd, String textEnrollment, String textDob, String textGender) {
+    private void registeruser(String textFullName, String textEmail, String textPwd, String textEnrollment, String textDob, String textGender , String textBatch) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.createUserWithEmailAndPassword(textEmail,textPwd).addOnCompleteListener(registeration_page.this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -147,7 +173,7 @@ public class registeration_page extends AppCompatActivity {
 
                     //Enter user data into the firebase realtime database
 
-                    ReadWriteUserDetail userDetail = new ReadWriteUserDetail(textFullName , textEnrollment, textDob, textGender);
+                    ReadWriteUserDetail userDetail = new ReadWriteUserDetail(textFullName , textEnrollment, textDob, textGender,textBatch);
 
 
                     DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("registeredUsers");
