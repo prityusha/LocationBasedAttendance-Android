@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class LoginPage extends AppCompatActivity {
 
@@ -87,7 +86,7 @@ public class LoginPage extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginPage.this , registeration_page.class);
+                Intent intent = new Intent(LoginPage.this , registration_page.class);
                 startActivity(intent);
             }
         });

@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Geoloco">
 
         <!-- registration page activity -->
-        <activity android:name=".registeration_page">
+        <activity android:name=".registration_page">
 
         </activity>
         <!-- this is our starting intent i.e. homepage -->
