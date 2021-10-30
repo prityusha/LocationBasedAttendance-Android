@@ -40,9 +40,11 @@ public class registration_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_page);
 
+        // we are modifying the action bar of the app to register
         Objects.requireNonNull(getSupportActionBar()).setTitle("Register");
         Toast.makeText(registration_page.this , "you can register now" , Toast.LENGTH_LONG).show();
 
+        // linking the defined variable to thier respected ids using find view by id
         progressBar_register = findViewById(R.id.progress_bar_register_page);
         editText_register_full_name = findViewById(R.id.edit_view_registration_page_full_name);
         editText_register_email = findViewById(R.id.edit_view_registration_page_email);
@@ -55,7 +57,7 @@ public class registration_page extends AppCompatActivity {
         radioGroup_register_gender = findViewById(R.id.radio_group_registration_page_gender);
         radioGroup_register_gender.clearCheck();
 
-
+        // adding the calender intent to show the calender option
         editText_register_dob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,8 +77,10 @@ public class registration_page extends AppCompatActivity {
             }
         });
 
-
+        //linking the register button to its respected id
         Button buttonRegister = findViewById(R.id.button_registration_page_register);
+
+        // making the OnClickListener method on the register button to assign the work done after the registration
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 int selectedGenderId = radioGroup_register_gender.getCheckedRadioButtonId();
@@ -91,6 +95,8 @@ public class registration_page extends AppCompatActivity {
                 String textDob = editText_register_dob.getText().toString();
                 String textBatch = editText_register_batch.getText().toString();
                 String textGender;
+
+                //checking the fulfillment of criteria required in each input type
                 if(TextUtils.isEmpty(textFullName)){
                     Toast.makeText(registration_page.this , "please enter the full name", Toast.LENGTH_LONG).show();
                     editText_register_full_name.setError("full name is required");
@@ -120,7 +126,7 @@ public class registration_page extends AppCompatActivity {
                     editText_register_confirm_pwd.setError("password must be same");
                     editText_register_confirm_pwd.requestFocus();
 
-                    //clearinf the previous password
+                    //clearing the previous password
 
                     editText_register_pwd.clearComposingText();
                     editText_register_confirm_pwd.clearComposingText();
@@ -145,7 +151,7 @@ public class registration_page extends AppCompatActivity {
                 else{
                     textGender = radioButton_register_button_gender.getText().toString();
                     progressBar_register.setVisibility(View.VISIBLE);
-                    registeruser(textFullName , textEmail , textPwd  , textEnrollment , textDob , textGender, textBatch);
+                    registerUser(textFullName , textEmail , textPwd  , textEnrollment , textDob , textGender, textBatch);
                 }
 
 
@@ -155,7 +161,8 @@ public class registration_page extends AppCompatActivity {
 
     }
 
-    private void registeruser(String textFullName, String textEmail, String textPwd, String textEnrollment, String textDob, String textGender , String textBatch) {
+    private void registerUser(String textFullName, String textEmail, String textPwd, String textEnrollment, String textDob, String textGender , String textBatch) {
+        //having a instance of firebase in auth variable
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.createUserWithEmailAndPassword(textEmail,textPwd).addOnCompleteListener(registration_page.this, new OnCompleteListener<AuthResult>() {
             @Override
