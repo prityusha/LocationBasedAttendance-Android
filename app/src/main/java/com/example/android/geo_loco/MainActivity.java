@@ -33,13 +33,19 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.net.URI;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,6 +62,66 @@ public class MainActivity extends AppCompatActivity {
     private Button updateButton;
     private String variableLatitude;
     private String variableLongitude;
+    private UserLocation mUserLocation;
+
+    private void getUserDetail(){
+        if(mUserLocation==null){
+            mUserLocation=new UserLocation();
+            DatabaseReference reference=FirebaseDatabase.getInstance().getReference("registeredUsers");
+            reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(MainActivity.this,"User Data Retreived",Toast.LENGTH_SHORT).show();
+                        DataSnapshot snapshot=task.getResult();
+
+                        String textFullName=String.valueOf(snapshot.child("textFullName").getValue());
+                        String enroll=String.valueOf(snapshot.child("textEnrollment").getValue());
+                        String dob=String.valueOf(snapshot.child("textDob").getValue());
+                        String gender=String.valueOf(snapshot.child("textGender").getValue());
+                        String batch=String.valueOf(snapshot.child("textBatch").getValue());
+
+
+                        ReadWriteUserDetail user=new ReadWriteUserDetail(textFullName,enroll,dob,gender,batch);
+                        mUserLocation.setUserLatitude(variableLatitude.toString());
+                        mUserLocation.setUserLongitude(variableLongitude.toString());
+                        mUserLocation.setUserDetail(user);
+                        saveUSerLocation();
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this,"Failed to user Info!",Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
+        }
+        else{
+            DatabaseReference reference=FirebaseDatabase.getInstance().getReference("UserLocation");
+            reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("userLatitude").setValue(variableLatitude);
+            reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("userLongitude").setValue(variableLongitude);
+            //saveUSerLocation();
+        }
+    }
+
+    private void saveUSerLocation(){
+        if(mUserLocation!=null){
+            DatabaseReference ref=FirebaseDatabase.getInstance().getReference("UserLocation");
+            ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .setValue(mUserLocation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(MainActivity.this,"User Location Added", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(MainActivity.this,"Failed to add", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+
+        }
+    }
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -67,11 +133,19 @@ public class MainActivity extends AppCompatActivity {
             for(Location location:locationResult.getLocations()){
                 Log.d(TAG, "onLocation Result" + location.toString());
 
-                textViewLat.setText(Double.toString(location.getLatitude()));
-                textViewLong.setText(Double.toString(location.getLongitude()));
+
 
                 variableLatitude=Double.toString(location.getLatitude());
                 variableLongitude=Double.toString(location.getLongitude());
+
+
+
+
+
+                textViewLat.setText(Double.toString(location.getLatitude()));
+                textViewLong.setText(Double.toString(location.getLongitude()));
+
+
 
             }
         }
@@ -83,6 +157,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        DatabaseReference ref=FirebaseDatabase.getInstance().getReference("registeredUsers");
+        ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot dataSnapshot= task.getResult();
+
+                    String user_name=String.valueOf(dataSnapshot.child("textFullName").getValue());
+                    Objects.requireNonNull(getSupportActionBar()).setTitle(user_name);
+                }
+            }
+        });
+
+
         textViewLat=findViewById(R.id.textView2);
         textViewLong=findViewById(R.id.textView3);
         updateButton=findViewById(R.id.buttonview);
@@ -91,8 +179,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                databaseReference.child("Latitude").push().setValue(variableLatitude.toString());
-                databaseReference.child("Longitude").push().setValue(variableLongitude.toString());
+
+                getUserDetail();
+
+                //databaseReference.child("Latitude").push().setValue(variableLatitude.toString());
+                //databaseReference.child("Longitude").push().setValue(variableLongitude.toString());
+
+
+
 
                 //ref.child(firebaseUser.getUid()).child("Latitude").setValue(value_lat);
                 //ref.child(firebaseUser.getUid()).child("Longitude").setValue(value_lng);
