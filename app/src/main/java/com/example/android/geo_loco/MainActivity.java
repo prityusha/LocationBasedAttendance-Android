@@ -140,8 +140,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
                 textViewLat.setText(Double.toString(location.getLatitude()));
                 textViewLong.setText(Double.toString(location.getLongitude()));
 
@@ -332,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                 checkSettingsAndStartLocationUpdate();
             }
             else{
-
+                Toast.makeText(MainActivity.this, "Couldn't get location permission 😢", Toast.LENGTH_LONG).show();
             }
         }
     }
