@@ -47,6 +47,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -58,15 +59,28 @@ public class MainActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationClient;
     LocationRequest locationRequest;
 
-    double Fence1_Latitude= 29.9262893;
+    ArrayList<ClassRoom_Location>arrayList_of_geofenceLatlng;
+
+    /*double Fence1_Latitude = 29.9262893;
     double Fence1_Longitude =  77.5179372;
+    String ClassRoomNumber1 = "Operating Systems Lab";
+
+    double Fence2_Latitude= 28.680847;
+    double Fence2_Longitude =  77.0552608;
+    String ClassRoomNumber2 = "Computer Organization & Architecture";
+
+    double Fence3_Latitude= 19.1146788;
+    double Fence3_Longitude =  72.8854589;
+    String ClassRoomNumber3 = "Object Oriented Programming Using Java";*/
+
+
 
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private TextView textViewLat;
     private TextView textViewLong;
-    private Button updateButton;
+    public  static Button updateButton;
     private String variableLatitude;
     private String variableLongitude;
     private UserLocation mUserLocation;
@@ -179,14 +193,14 @@ public class MainActivity extends AppCompatActivity {
         textViewLat = findViewById(R.id.textView2);
         textViewLong = findViewById(R.id.textView3);
         updateButton = findViewById(R.id.buttonview);
+        updateButton.setVisibility(View.GONE);
 
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 getUserDetail();
 
-                Toast.makeText(MainActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Attendance Marked!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -203,9 +217,19 @@ public class MainActivity extends AppCompatActivity {
         geofencingClient = LocationServices.getGeofencingClient(MainActivity.this);
         geofenceHelper = new GeofenceHelper(MainActivity.this);
 
+        arrayList_of_geofenceLatlng=new ArrayList<>();
+        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(29.9262893,77.5179372,"Operating Systems Lab"));
+        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(28.680847,77.0552608,"Computer Organization & Architecture"));
+        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(19.1146788,72.8854589,"Object Oriented Programming Using Java"));
+
         if (Build.VERSION.SDK_INT >= 29) {
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                addGeofence();
+                for(ClassRoom_Location classRoom_location:arrayList_of_geofenceLatlng){
+                    addGeofence(classRoom_location.ClassName,classRoom_location.Fence_Latitude,classRoom_location.Fence_Longitude);
+                }
+                /*addGeofence(ClassRoomNumber1,Fence1_Latitude,Fence1_Longitude);
+                addGeofence(ClassRoomNumber2,Fence2_Latitude,Fence2_Longitude);
+                addGeofence(ClassRoomNumber3,Fence3_Latitude,Fence3_Longitude);*/
             } else {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
 
@@ -216,7 +240,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } else {
-            addGeofence();
+            for(ClassRoom_Location classRoom_location:arrayList_of_geofenceLatlng){
+                addGeofence(classRoom_location.ClassName,classRoom_location.Fence_Latitude,classRoom_location.Fence_Longitude);
+            }
+            /*addGeofence(ClassRoomNumber1,Fence1_Latitude,Fence1_Longitude);
+            addGeofence(ClassRoomNumber2,Fence2_Latitude,Fence2_Longitude);
+            addGeofence(ClassRoomNumber3,Fence3_Latitude,Fence3_Longitude);*/
         }
 
 
@@ -349,12 +378,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void addGeofence() {
+    private void addGeofence(String ClassroomNum, double Fence_Latitude, double Fence_Longitude) {
         Log.d(TAG, "addGeofence() called..");
-        LatLng latLng = new LatLng(Fence1_Latitude, Fence1_Longitude);
-        Geofence geofence = geofenceHelper.getGeofence(UUID.randomUUID().toString(), latLng, GEOFENCE_RADIUS, Geofence.GEOFENCE_TRANSITION_DWELL);
+        LatLng latLng = new LatLng(Fence_Latitude, Fence_Longitude);
+        //UUID.randomUUID().toString()
+        Geofence geofence = geofenceHelper.getGeofence(ClassroomNum, latLng, GEOFENCE_RADIUS, Geofence.GEOFENCE_TRANSITION_DWELL);
         GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
-        geofenceHelper.sendClassroomVal("ClassRoom 1");
+        //geofenceHelper.sendClassroomVal(ClassroomNum);
         PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
 
 

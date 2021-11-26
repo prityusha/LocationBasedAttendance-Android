@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.Geofence;
@@ -33,7 +34,7 @@ public class GeofenceHelper extends ContextWrapper {
         return new Geofence.Builder()
                 .setCircularRegion(latLng.latitude, latLng.longitude, radius)
                 .setRequestId(ID)
-                .setTransitionTypes(transitionTypes).setLoiteringDelay(5000)
+                .setTransitionTypes(transitionTypes).setLoiteringDelay(1000)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .build();
     }
@@ -43,9 +44,10 @@ public class GeofenceHelper extends ContextWrapper {
             return pendingIntent;
         }
 
-
+        Log.d("first","Intent clalled");
         Intent intent = new Intent(this, GoefenceBroadcastReceiver.class);
-        intent.putExtra("key",classRoomVal);
+        //String k=((MyApplication) getApplicationContext()).getKey();
+        //intent.putExtra("key",classRoomVal);
         pendingIntent =  PendingIntent.getBroadcast(this, 2607, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return pendingIntent;
@@ -69,8 +71,8 @@ public class GeofenceHelper extends ContextWrapper {
         return e.getLocalizedMessage();
     }
 
-    public void sendClassroomVal(String classVal){
+    /*public void sendClassroomVal(String classVal){
         classRoomVal=classVal;
-    }
+    }*/
 
 }
