@@ -155,16 +155,11 @@ public class MainActivity extends AppCompatActivity {
             }
             for (Location location : locationResult.getLocations()) {
                 //Log.d(TAG, "onLocation Result" + location.toString());
-
-
                 variableLatitude = Double.toString(location.getLatitude());
                 variableLongitude = Double.toString(location.getLongitude());
 
-
                 textViewLat.setText(Double.toString(location.getLatitude()));
                 textViewLong.setText(Double.toString(location.getLongitude()));
-
-
             }
 
         }
