@@ -48,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private GeofenceHelper geofenceHelper;
     private GeofencingClient geofencingClient;
     private float GEOFENCE_RADIUS = 200;
+    public static final String[] UserEnroll = new String[1];
 
 
     private void getUserDetail() {
@@ -184,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     DataSnapshot dataSnapshot = task.getResult();
 
                     String user_name = String.valueOf(dataSnapshot.child("textFullName").getValue());
+                    UserEnroll[0] = String.valueOf(dataSnapshot.child("textEnrollment").getValue());
                     Objects.requireNonNull(getSupportActionBar()).setTitle(user_name);
                 }
             }
@@ -199,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getUserDetail();
+
+
 
                 Toast.makeText(MainActivity.this, "Attendance Marked!", Toast.LENGTH_SHORT).show();
             }
@@ -221,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
         arrayList_of_geofenceLatlng.add(new ClassRoom_Location(29.9262893,77.5179372,"Operating Systems Lab"));
         arrayList_of_geofenceLatlng.add(new ClassRoom_Location(28.680847,77.0552608,"Computer Organization & Architecture"));
         arrayList_of_geofenceLatlng.add(new ClassRoom_Location(19.1146788,72.8854589,"Object Oriented Programming Using Java"));
+        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(26.8531697,80.9136721,"Logical Reasoning & Inequality"));
 
         if (Build.VERSION.SDK_INT >= 29) {
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -249,7 +255,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+
     }
+
 
 
     protected void onStart() {
@@ -379,7 +387,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void addGeofence(String ClassroomNum, double Fence_Latitude, double Fence_Longitude) {
-        Log.d(TAG, "addGeofence() called..");
+        Log.d(TAG, "addGeofence() called.."+ClassroomNum);
         LatLng latLng = new LatLng(Fence_Latitude, Fence_Longitude);
         //UUID.randomUUID().toString()
         Geofence geofence = geofenceHelper.getGeofence(ClassroomNum, latLng, GEOFENCE_RADIUS, Geofence.GEOFENCE_TRANSITION_DWELL);
