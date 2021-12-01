@@ -26,7 +26,8 @@
         <receiver
             android:name=".GoefenceBroadcastReceiver"
             android:enabled="true"
-            android:exported="true" /> <!-- registration page activity -->
+            android:exported="true" />
+        <!-- registration page activity -->
         <activity android:name=".registration_page" /> <!-- this is our starting intent i.e. homepage -->
         <activity
             android:name=".Homepage"
