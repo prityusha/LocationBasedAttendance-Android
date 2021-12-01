@@ -6,6 +6,10 @@
         <entry key="..\:/Playground/LocationBasedAttendance-Android/app/src/main/res/layout/activity_homepage.xml" value="0.36666666666666664" />
         <entry key="..\:/Playground/LocationBasedAttendance-Android/app/src/main/res/layout/activity_login_page.xml" value="0.36666666666666664" />
         <entry key="..\:/Playground/LocationBasedAttendance-Android/app/src/main/res/layout/activity_signup.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.17864583333333334" />
+        <entry key="app/src/main/res/layout/activity_schedule.xml" value="0.19375" />
+        <entry key="app/src/main/res/menu/menu.xml" value="0.19739583333333333" />
       </map>
     </option>
   </component>
