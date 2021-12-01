@@ -29,12 +29,16 @@ public class Profile extends AppCompatActivity {
                     case R.id.home:
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         overridePendingTransition(0,0 );
+
                         finish();
+
                         return true;
                     case R.id.schedule:
                         startActivity(new Intent(getApplicationContext(), Schedule.class));
                         overridePendingTransition(0,0 );
+
                         finish();
+
                         return true;
                     case R.id.profile:
                         //startActivity(new Intent(getApplicationContext(), Profile.class));
