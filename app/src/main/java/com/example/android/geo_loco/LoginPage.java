@@ -107,4 +107,16 @@ public class LoginPage extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(authProfile.getCurrentUser()!=null){
+                startActivity(new Intent(LoginPage.this , MainActivity.class));
+                finish();
+                        //start the main activity
+        }else{
+            Toast.makeText(LoginPage.this , "Ready to login ",Toast.LENGTH_LONG).show();
+        }
+    }
 }

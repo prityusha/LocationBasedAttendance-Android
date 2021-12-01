@@ -189,10 +189,15 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.schedule:
                         startActivity(new Intent(getApplicationContext(), Schedule.class));
                         overridePendingTransition(0,0 );
-                        return true;
+
+                        finish();
+              return true;
                     case R.id.profile:
                         startActivity(new Intent(getApplicationContext(), Profile.class));
                         overridePendingTransition(0,0 );
+
+                        finish();
+
                         return true;
                 }
                 return false;
