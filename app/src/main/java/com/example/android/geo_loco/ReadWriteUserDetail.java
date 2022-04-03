@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class ReadWriteUserDetail  implements Serializable {
     public String textFullName ,textDob , textGender ,textEnrollment ,textBatch;
 
+    public ReadWriteUserDetail(){};
+
     public ReadWriteUserDetail(String textFullName , String textEnrollment , String textDob ,String textGender , String textBatch){ ;
         this.textFullName = textFullName;
         this.textEnrollment = textEnrollment;

@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/logo_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Geoloco">
+        <activity android:name=".VariableGeofence"></activity>
         <activity
             android:name=".Profile"
             android:exported="true" />
@@ -26,8 +27,7 @@
         <receiver
             android:name=".GoefenceBroadcastReceiver"
             android:enabled="true"
-            android:exported="true" />
-        <!-- registration page activity -->
+            android:exported="true" /> <!-- registration page activity -->
         <activity android:name=".registration_page" /> <!-- this is our starting intent i.e. homepage -->
         <activity
             android:name=".Homepage"
@@ -54,11 +54,13 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".MainActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
     </application>
 

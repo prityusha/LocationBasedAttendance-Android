@@ -48,8 +48,8 @@ public class LoginPage extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String textEmail = editTextLoginEmail.getText().toString();
-                String textPwd = editTextLoginPwd.getText().toString();
+                String textEmail = editTextLoginEmail.getText().toString().trim();
+                String textPwd = editTextLoginPwd.getText().toString().trim();
 
                 if(TextUtils.isEmpty(textEmail)){
                     Toast.makeText(LoginPage.this , "please enter your email", Toast.LENGTH_LONG).show();

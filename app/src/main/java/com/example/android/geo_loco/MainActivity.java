@@ -19,12 +19,16 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
@@ -206,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         //
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("registeredUsers");
         ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -252,10 +257,10 @@ public class MainActivity extends AppCompatActivity {
         geofenceHelper = new GeofenceHelper(MainActivity.this);
 
         arrayList_of_geofenceLatlng=new ArrayList<>();
-        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(29.9262893,77.5179372,"Operating Systems Lab"));
-        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(28.680847,77.0552608,"Computer Organization & Architecture"));
+        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(28.5191469,77.3652231,"Operating Systems Lab"));
+        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(28.6292334,77.3758805,"Computer Organization & Architecture"));
         arrayList_of_geofenceLatlng.add(new ClassRoom_Location(19.1146788,72.8854589,"Object Oriented Programming Using Java"));
-        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(26.8531697,80.9136721,"Logical Reasoning & Inequality"));
+        arrayList_of_geofenceLatlng.add(new ClassRoom_Location(28.6294878,77.3745862,"Logical Reasoning & Inequality"));
 
         if (Build.VERSION.SDK_INT >= 29) {
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -286,6 +291,55 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.hamburger_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.hamHome:
+                //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                //overridePendingTransition(0,0 );
+                return true;
+            case R.id.hamSchedule:
+                startActivity(new Intent(getApplicationContext(), Schedule.class));
+                overridePendingTransition(0,0 );
+
+                finish();
+                return true;
+            case R.id.hamProfile:
+                startActivity(new Intent(getApplicationContext(), Profile.class));
+                overridePendingTransition(0,0 );
+
+                finish();
+
+                return true;
+            case R.id.hamLogout:
+                signOut();
+                break;
+        }
+        return false;
+    }
+
+    private void signOut(){
+        FirebaseAuth.getInstance().signOut();
+        GoogleSignIn.getClient(
+                this,
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        ).signOut();
+        Intent intent = new Intent(MainActivity.this, LoginPage.class);
+        startActivity(intent);
+        finish();
+
+
+
+    }
+
 
 
 
@@ -415,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void addGeofence(String ClassroomNum, double Fence_Latitude, double Fence_Longitude) {
+    public void addGeofence(String ClassroomNum, double Fence_Latitude, double Fence_Longitude) {
         Log.d(TAG, "addGeofence() called.."+ClassroomNum);
         LatLng latLng = new LatLng(Fence_Latitude, Fence_Longitude);
         //UUID.randomUUID().toString()

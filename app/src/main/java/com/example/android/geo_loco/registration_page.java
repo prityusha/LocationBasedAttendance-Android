@@ -88,9 +88,9 @@ public class registration_page extends AppCompatActivity {
 
                 //<!-- taking the input and creating var for them -->
                 String textFullName = editText_register_full_name.getText().toString();
-                String textEmail = editText_register_email.getText().toString();
-                String textPwd = editText_register_pwd.getText().toString();
-                String textConfirmPwd = editText_register_confirm_pwd.getText().toString();
+                String textEmail = editText_register_email.getText().toString().trim();
+                String textPwd = editText_register_pwd.getText().toString().trim();
+                String textConfirmPwd = editText_register_confirm_pwd.getText().toString().trim();
                 String textEnrollment = editText_register_enrollment.getText().toString();
                 String textDob = editText_register_dob.getText().toString();
                 String textBatch = editText_register_batch.getText().toString();
