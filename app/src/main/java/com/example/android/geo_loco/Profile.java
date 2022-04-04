@@ -62,7 +62,7 @@ public class Profile extends AppCompatActivity {
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        root = FirebaseDatabase.getInstance().getReference("baseImage");
+        root = FirebaseDatabase.getInstance().getReference("registeredUsers");
 
 
         // bottom navigation
@@ -149,7 +149,8 @@ public class Profile extends AppCompatActivity {
                             public void onSuccess(Uri uri) {
                                 Model model = new Model(uri.toString());
                                 String modelId=root.push().getKey();
-                                root.child(modelId).setValue(model);
+                                root.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("IMG_URL").setValue(model);
+                                //root.child(modelId).setValue(model);
                                 Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).show();
                             }
                         });

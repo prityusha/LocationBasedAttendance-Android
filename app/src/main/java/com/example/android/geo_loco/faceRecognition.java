@@ -20,9 +20,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -126,23 +129,6 @@ public class faceRecognition extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                     for(DataSnapshot datas: snapshot.getChildren()){
-                        baseUrl = datas.getValue().toString();
-                        Log.d("AskPermission",baseUrl);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-                }
-            });
-
-            referenceBaseImageUrl = FirebaseDatabase.getInstance().getReference().child("baseImage");
-            Query query1=referenceBaseImageUrl.orderByKey().limitToFirst(1);
-            query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    for(DataSnapshot datas: snapshot.getChildren()){
                         checkPointUrl = datas.getValue().toString();
                         Log.d("AskPermission",checkPointUrl);
                     }
@@ -153,6 +139,38 @@ public class faceRecognition extends AppCompatActivity {
 
                 }
             });
+
+            referenceBaseImageUrl = FirebaseDatabase.getInstance().getReference().child("registeredUsers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+            referenceBaseImageUrl.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                    if (task.isSuccessful()) {
+
+                        DataSnapshot snapshot = task.getResult();
+                        baseUrl = String.valueOf(snapshot.child("IMG_URL").getValue());
+                        Log.d("AskPermission",baseUrl);
+                    } else {
+                        Toast.makeText(faceRecognition.this, "Failed to retreive base image", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
+            /*Query query1=referenceBaseImageUrl.orderByKey().limitToFirst(1);
+            query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    for(DataSnapshot datas: snapshot.getChildren()){
+                        baseUrl = datas.getValue().toString();
+                        Log.d("AskPermission",baseUrl);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });*/
 
 
             startActivity(new Intent(faceRecognition.this , MainActivity.class));
@@ -184,7 +202,7 @@ public class faceRecognition extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull @NotNull Exception e) {
-                Toast.makeText(faceRecognition.this, "Something went wrong!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(faceRecognition.this, "FaceRecognition Something went wrong!!", Toast.LENGTH_SHORT).show();
             }
         });
 
