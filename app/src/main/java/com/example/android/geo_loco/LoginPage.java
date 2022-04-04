@@ -99,7 +99,7 @@ public class LoginPage extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(LoginPage.this , "User successfully logged in 🥳" ,Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginPage.this , MainActivity.class);
+                    Intent intent = new Intent(LoginPage.this , faceRecognition.class);
                     startActivity(intent);
                 }else{
                     Toast.makeText(LoginPage.this , "Something Went Wrong",Toast.LENGTH_LONG).show();
@@ -112,7 +112,7 @@ public class LoginPage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(authProfile.getCurrentUser()!=null){
-                startActivity(new Intent(LoginPage.this , MainActivity.class));
+                startActivity(new Intent(LoginPage.this , faceRecognition.class));
                 finish();
                         //start the main activity
         }else{

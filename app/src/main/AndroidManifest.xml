@@ -8,7 +8,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo_launcher_adaptive_fore"
@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/logo_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Geoloco">
-        <activity android:name=".VariableGeofence"></activity>
+        <activity android:name=".faceRecognition"></activity>
+        <activity android:name=".VariableGeofence" />
         <activity
             android:name=".Profile"
             android:exported="true" />
