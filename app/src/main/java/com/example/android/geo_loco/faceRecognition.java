@@ -142,7 +142,20 @@ public class faceRecognition extends AppCompatActivity {
 
             referenceBaseImageUrl = FirebaseDatabase.getInstance().getReference().child("registeredUsers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-            referenceBaseImageUrl.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            referenceBaseImageUrl.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    baseUrl = String.valueOf(snapshot.child("BASE_IMG_URL").getValue());
+                    Log.d("AskPermission",baseUrl);
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                    Toast.makeText(faceRecognition.this, "Failed to retreive base image", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            /*referenceBaseImageUrl.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
@@ -155,7 +168,7 @@ public class faceRecognition extends AppCompatActivity {
                     }
 
                 }
-            });
+            });*/
             /*Query query1=referenceBaseImageUrl.orderByKey().limitToFirst(1);
             query1.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

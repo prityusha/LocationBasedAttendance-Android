@@ -148,8 +148,8 @@ public class Profile extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 Model model = new Model(uri.toString());
-                                String modelId=root.push().getKey();
-                                root.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("IMG_URL").setValue(model);
+                                //String modelId=root.push().getKey();
+                                root.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("BASE_IMG_URL").setValue(model);
                                 //root.child(modelId).setValue(model);
                                 Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).show();
                             }
