@@ -102,7 +102,7 @@ public class LoginPage extends AppCompatActivity {
                     Intent intent = new Intent(LoginPage.this , faceRecognition.class);
                     startActivity(intent);
                 }else{
-                    Toast.makeText(LoginPage.this , "Something Went Wrong",Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginPage.this , "Error: wrong password or wrong email address",Toast.LENGTH_LONG).show();
                 }
             }
         });
