@@ -27,6 +27,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.geo_loco.ClassRoom_Location;
+import com.example.android.geo_loco.GeofenceHelper;
+import com.example.android.geo_loco.LoginPage;
+import com.example.android.geo_loco.R;
+import com.example.android.geo_loco.ReadWriteUserDetail;
+import com.example.android.geo_loco.Schedule;
+import com.example.android.geo_loco.UserLocation;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ResolvableApiException;
