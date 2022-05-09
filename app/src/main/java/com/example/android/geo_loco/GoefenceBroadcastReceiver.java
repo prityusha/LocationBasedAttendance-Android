@@ -54,11 +54,7 @@ public class GoefenceBroadcastReceiver extends BroadcastReceiver {
 
                 GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
-        /*Bundle extras=intent.getExtras();
-        if(extras!=null){
-            ClassRoomNumber=extras.getString("key");
-            Log.d("first",ClassRoomNumber);
-        }*/
+
                 if(geofencingEvent.hasError()){
                     Log.d("AskPermission", "onReceive: Error Receiving Geofence Event..");
                     return;

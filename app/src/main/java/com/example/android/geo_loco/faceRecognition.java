@@ -20,6 +20,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,8 +43,14 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class faceRecognition extends AppCompatActivity {
 
@@ -55,6 +67,9 @@ public class faceRecognition extends AppCompatActivity {
     private DatabaseReference referenceCheckPointImageUrl;
     private String baseUrl;
     private String checkPointUrl;
+    private String url = "http://127.0.0.1:5000";
+    List<String>imagesUrlList;
+    byte bb[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +84,7 @@ public class faceRecognition extends AppCompatActivity {
         storageReference = storage.getReference();
         root = FirebaseDatabase.getInstance().getReference("clickedImage");
         referenceBaseImageUrl = FirebaseDatabase.getInstance().getReference().child("baseImage");
-
+        imagesUrlList=new ArrayList<>();
 
 
         camera.setOnClickListener(new View.OnClickListener() {
@@ -115,89 +130,113 @@ public class faceRecognition extends AppCompatActivity {
             Bitmap clickedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             clickedImage.compress(Bitmap.CompressFormat.JPEG,90,bytes);
-            byte bb[] = bytes.toByteArray();
+            bb = bytes.toByteArray();
             img.setImageBitmap(clickedImage);
 
 
-
-
-            uploadPicture(bb);
-
-            referenceCheckPointImageUrl = FirebaseDatabase.getInstance().getReference().child("clickedImage");
-            Query query=referenceCheckPointImageUrl.orderByKey().limitToFirst(1);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
+            readData(new FirebaseCallback() {
                 @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    for(DataSnapshot datas: snapshot.getChildren()){
-                        checkPointUrl = datas.getValue().toString();
-                        Log.d("AskPermission",checkPointUrl);
-                    }
-                }
+                public void onCallback() {
 
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                    readData1(new FirebaseCallback1() {
+                        @Override
+                        public void onCallback1() {
+                            final boolean[] result = new boolean[1];
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        String data = jsonObject.getString("verified");
+                                        if(data=="true"){
+                                            result[0] =true;
+                                        }
+                                        else{
+                                            result[0]=false;
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            Log.d("AskPermission","Error in API call"+error.getMessage());
+                                            //Toast.makeText(faceRecognition.this, "Error in API call"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }){
+                                @Override
+                                protected Map<String,String> getParams(){
+                                    Map<String,String> params = new HashMap<String, String>();
+                                    params.put("baseUrl", baseUrl);
+                                    params.put("checkPointUrl",checkPointUrl);
+                                    return params;
+                                }
+                            };
+                            RequestQueue queue = Volley.newRequestQueue(faceRecognition.this);
+                            queue.add(stringRequest);
+                            //startActivity(new Intent(faceRecognition.this , MainActivity.class));
+                            if(result[0]){
+                                startActivity(new Intent(faceRecognition.this , MainActivity.class));
+                            }
+                            else{
+                                Toast.makeText(faceRecognition.this, "Face did not match. Please Try again!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
                 }
             });
 
-            referenceBaseImageUrl = FirebaseDatabase.getInstance().getReference().child("registeredUsers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-            referenceBaseImageUrl.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    baseUrl = String.valueOf(snapshot.child("BASE_IMG_URL").getValue());
-                    Log.d("AskPermission",baseUrl);
-                }
-
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                    Toast.makeText(faceRecognition.this, "Failed to retreive base image", Toast.LENGTH_LONG).show();
-                }
-            });
-
-            /*referenceBaseImageUrl.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
-                    if (task.isSuccessful()) {
-
-                        DataSnapshot snapshot = task.getResult();
-                        baseUrl = String.valueOf(snapshot.child("IMG_URL").getValue());
-                        Log.d("AskPermission",baseUrl);
-                    } else {
-                        Toast.makeText(faceRecognition.this, "Failed to retreive base image", Toast.LENGTH_LONG).show();
-                    }
-
-                }
-            });*/
-            /*Query query1=referenceBaseImageUrl.orderByKey().limitToFirst(1);
-            query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    for(DataSnapshot datas: snapshot.getChildren()){
-                        baseUrl = datas.getValue().toString();
-                        Log.d("AskPermission",baseUrl);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-                }
-            });*/
 
 
-            startActivity(new Intent(faceRecognition.this , MainActivity.class));
-
-            /*ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.id.capturedimage);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] imageBytes = baos.toByteArray();
-            String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);*/
         }
     }
 
-    private void uploadPicture(byte[] bb) {
+    /*private boolean getFacialRecognitionResult() {
 
+        final boolean[] result = new boolean[1];
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String data = jsonObject.getString("verified");
+                    if(data=="true"){
+                        result[0] =true;
+                    }
+                    else{
+                        result[0]=false;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("AskPermission","Error in API call"+error.getMessage());
+                        //Toast.makeText(faceRecognition.this, "Error in API call"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("baseUrl", baseUrl);
+                params.put("checkPointUrl",checkPointUrl);
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(faceRecognition.this);
+        queue.add(stringRequest);
+        return result[0];
+    }*/
+
+    private void readData(FirebaseCallback firebaseCallback){
         StorageReference ref = storageReference.child("myImages/a.jpg");
         ref.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -208,6 +247,9 @@ public class faceRecognition extends AppCompatActivity {
                         Model model = new Model(uri.toString());
                         String modelId=root.push().getKey();
                         root.child(modelId).setValue(model);
+
+                        Log.d("AskPermission","Image Uploaded");
+                        firebaseCallback.onCallback();
                         Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).show();
                     }
                 });
@@ -219,7 +261,53 @@ public class faceRecognition extends AppCompatActivity {
             }
         });
 
+
+    }
+    private interface FirebaseCallback{
+        void onCallback();
+    }
+
+    private void readData1(FirebaseCallback1 firebaseCallback){
+        referenceCheckPointImageUrl = FirebaseDatabase.getInstance().getReference().child("clickedImage");
+        Query query=referenceCheckPointImageUrl.orderByKey().limitToFirst(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                for(DataSnapshot datas: snapshot.getChildren()){
+                    checkPointUrl = datas.getValue().toString();
+                    Log.d("AskPermission","CheckPoint Image URL"+checkPointUrl);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Log.d("AskPermission","Error in checkPoint Image URL creation");
+            }
+        });
+
+
+
+        referenceBaseImageUrl = FirebaseDatabase.getInstance().getReference().child("registeredUsers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        referenceBaseImageUrl.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                baseUrl = String.valueOf(snapshot.child("BASE_IMG_URL").getValue());
+                Log.d("AskPermission","Base Image URL"+baseUrl);
+                firebaseCallback.onCallback1();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Toast.makeText(faceRecognition.this, "Failed to retreive base image", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    private interface FirebaseCallback1{
+        void onCallback1();
     }
 
 
 }
+
