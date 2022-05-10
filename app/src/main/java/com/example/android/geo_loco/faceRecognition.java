@@ -67,7 +67,7 @@ public class faceRecognition extends AppCompatActivity {
     private DatabaseReference referenceCheckPointImageUrl;
     private String baseUrl;
     private String checkPointUrl;
-    private String url = "http://127.0.0.1:5000";
+    private String url = "http://192.168.60.73:5000";
     List<String>imagesUrlList;
     byte bb[];
 
@@ -141,49 +141,56 @@ public class faceRecognition extends AppCompatActivity {
                     readData1(new FirebaseCallback1() {
                         @Override
                         public void onCallback1() {
-                            final boolean[] result = new boolean[1];
-                            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(response);
-                                        String data = jsonObject.getString("verified");
-                                        if(data=="true"){
-                                            result[0] =true;
-                                        }
-                                        else{
-                                            result[0]=false;
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
 
-                                }
-                            },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            Log.d("AskPermission","Error in API call"+error.getMessage());
-                                            //Toast.makeText(faceRecognition.this, "Error in API call"+error.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }){
+                            readData2(new FirebaseCallback2() {
                                 @Override
-                                protected Map<String,String> getParams(){
-                                    Map<String,String> params = new HashMap<String, String>();
-                                    params.put("baseUrl", baseUrl);
-                                    params.put("checkPointUrl",checkPointUrl);
-                                    return params;
+                                public void onCallback2() {
+                                    final boolean[] result = new boolean[1];
+                                    StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response);
+                                                String data = jsonObject.getString("verified");
+                                                if(data=="true"){
+                                                    result[0] =true;
+                                                }
+                                                else{
+                                                    result[0]=false;
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                    },
+                                            new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    Log.d("AskPermission","Error in API call"+error.getMessage());
+                                                    //Toast.makeText(faceRecognition.this, "Error in API call"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }){
+                                        @Override
+                                        protected Map<String,String> getParams(){
+                                            Map<String,String> params = new HashMap<String, String>();
+                                            params.put("baseUrl", baseUrl);
+                                            params.put("checkPointUrl",checkPointUrl);
+                                            return params;
+                                        }
+                                    };
+                                    RequestQueue queue = Volley.newRequestQueue(faceRecognition.this);
+                                    queue.add(stringRequest);
+                                    //startActivity(new Intent(faceRecognition.this , MainActivity.class));
+                                    if(result[0]){
+                                        startActivity(new Intent(faceRecognition.this , MainActivity.class));
+                                    }
+                                    else{
+                                        Toast.makeText(faceRecognition.this, "Face did not match. Please Try again!", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            };
-                            RequestQueue queue = Volley.newRequestQueue(faceRecognition.this);
-                            queue.add(stringRequest);
-                            //startActivity(new Intent(faceRecognition.this , MainActivity.class));
-                            if(result[0]){
-                                startActivity(new Intent(faceRecognition.this , MainActivity.class));
-                            }
-                            else{
-                                Toast.makeText(faceRecognition.this, "Face did not match. Please Try again!", Toast.LENGTH_SHORT).show();
-                            }
+                            });
+
                         }
                     });
 
@@ -268,25 +275,6 @@ public class faceRecognition extends AppCompatActivity {
     }
 
     private void readData1(FirebaseCallback1 firebaseCallback){
-        referenceCheckPointImageUrl = FirebaseDatabase.getInstance().getReference().child("clickedImage");
-        Query query=referenceCheckPointImageUrl.orderByKey().limitToFirst(1);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                for(DataSnapshot datas: snapshot.getChildren()){
-                    checkPointUrl = datas.getValue().toString();
-                    Log.d("AskPermission","CheckPoint Image URL"+checkPointUrl);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.d("AskPermission","Error in checkPoint Image URL creation");
-            }
-        });
-
-
 
         referenceBaseImageUrl = FirebaseDatabase.getInstance().getReference().child("registeredUsers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
@@ -308,6 +296,30 @@ public class faceRecognition extends AppCompatActivity {
         void onCallback1();
     }
 
+
+    private void readData2(FirebaseCallback2 firebaseCallback){
+        referenceCheckPointImageUrl = FirebaseDatabase.getInstance().getReference().child("clickedImage");
+        Query query=referenceCheckPointImageUrl.orderByKey().limitToFirst(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                for(DataSnapshot datas: snapshot.getChildren()){
+                    checkPointUrl = datas.getValue().toString();
+                    Log.d("AskPermission","CheckPoint Image URL"+checkPointUrl);
+                    firebaseCallback.onCallback2();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Log.d("AskPermission","Error in checkPoint Image URL creation");
+            }
+        });
+
+    }
+    private interface FirebaseCallback2{
+        void onCallback2();
+    }
 
 }
 
